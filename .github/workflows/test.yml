@@ -1,39 +1,57 @@
 name: Run Tests
 
 on:
-  pull_request:
-    branches: 
-     - master
+  push:
+    branches:
+      - master  
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-    
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-    
-    - name: Run tests with coverage
-      run: |
-        pip install coverage
-        coverage run --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s API_Testing -p "test_*.py"
-        coverage run --append --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s UI_Testing -p "test_*.py"
-        coverage xml -o coverage.xml
+      - uses: actions/checkout@v4
 
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
 
+      - name: Pull and Run SonarQube container
+        run: |
+          docker run -d --name sonarqube -p 9000:9000 sonarqube
+          
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          for i in {1..30}; do
+            if curl -s http://localhost:9000 | grep -q "SonarQube"; then
+              echo "SonarQube is up!"
+              break
+            fi
+            echo "Waiting..."
+            sleep 5
+          done
 
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run tests with coverage
+        run: |
+          pip install coverage
+          coverage run --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s API_Testing -p "test_*.py"
+          coverage run --append --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s UI_Testing -p "test_*.py"
+          coverage xml -o coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Cleanup Docker container
+        run: |
+          docker stop sonarqube
+          docker rm sonarqube
