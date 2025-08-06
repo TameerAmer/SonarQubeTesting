@@ -47,3 +47,5 @@ reports/
 # Misc
 *.tmp
 *.bak
+
+.pytest_cache
