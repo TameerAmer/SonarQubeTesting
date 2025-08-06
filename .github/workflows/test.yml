@@ -24,8 +24,10 @@ jobs:
     - name: Run tests with coverage
       run: |
         pip install coverage
-        coverage run --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s tests -p "test_*.py"
-        coverage xml
+        coverage run --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s API_Testing -p "test_*.py"
+        coverage run --append --omit="*/config.py,*/config-3.py,/tmp/*" -m unittest discover -s UI_Testing -p "test_*.py"
+        coverage xml -o coverage.xml
+
 
 
 
