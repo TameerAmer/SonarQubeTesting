@@ -1,9 +1,9 @@
 name: Run Tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - master  
+      - master  # or main — update to match your branch name
 
 jobs:
   test:
