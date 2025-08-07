@@ -49,3 +49,4 @@ reports/
 *.bak
 
 .pytest_cache
+.coverage

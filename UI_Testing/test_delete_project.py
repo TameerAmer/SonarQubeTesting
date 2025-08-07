@@ -8,13 +8,21 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from UI_Testing.pages import LoginPage, ProjectPage
 
+from selenium.webdriver.chrome.options import Options
 
 
-BASE_URL = "http://localhost:9000" 
+
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:9000')  # Default to localhost if not set
 
 class TestCreateDeleteProject(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        if 'headless' in sys.argv:
+            options = Options()
+            options.add_argument("--headless")
+            options.add_argument("--no-sandbox")
+            self.driver = webdriver.Chrome(options=options)
+        else:
+            self.driver = webdriver.Chrome()
         self.driver.get(BASE_URL)
         self.driver.maximize_window()
         self.driver.implicitly_wait(5)
@@ -48,6 +56,7 @@ class TestCreateDeleteProject(unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
+        
 
 if __name__ == "__main__":
     unittest.main()
