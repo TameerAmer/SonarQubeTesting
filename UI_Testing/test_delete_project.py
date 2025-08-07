@@ -16,7 +16,7 @@ BASE_URL = os.environ.get('BASE_URL', 'http://localhost:9000')  # Default to loc
 
 class TestCreateDeleteProject(unittest.TestCase):
     def setUp(self):
-        if 'headless' in sys.argv:
+        if os.environ.get("HEADLESS", "false").lower() == "true":
             options = Options()
             options.add_argument("--headless")
             options.add_argument("--no-sandbox")
