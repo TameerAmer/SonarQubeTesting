@@ -1,9 +1,11 @@
+import os
 import unittest
 import requests
 from requests.auth import HTTPBasicAuth
 
 class TestAuthentication(unittest.TestCase):
-    BASE_URL = "http://localhost:9000"
+
+    BASE_URL = os.environ.get("BASE_URL", "http://localhost:9000")
     AUTH = HTTPBasicAuth("admin", "Mypassword1?")
     
 
