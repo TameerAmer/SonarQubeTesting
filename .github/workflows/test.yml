@@ -23,6 +23,8 @@ jobs:
         pip install pytest pytest-cov
 
     - name: Run pytest with coverage
+      env:
+        BASE_URL: http://34.245.94.33:9000
       run: |
         pytest --cov=API_Testing --cov-report=xml API_Testing/
 
