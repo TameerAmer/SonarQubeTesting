@@ -60,7 +60,7 @@ class ProjectPage:
         self.deletion_button_2 = (By.ID, "delete-project")
         self.delete_modal = (By.XPATH, "//div[@role='alertdialog' and contains(., 'Delete Project')]")
         self.delete_button_3 = (By.XPATH, ".//button[.//span[text()='Delete']]")
-        self.success_toast = (By.CSS_SELECTOR, '[data-testid="global-message__SUCCESS"]')
+        self.success_toast = (By.XPATH, "//p[contains(text(), 'has been successfully deleted.')]")
 
     def go_to_projects(self):
         self.driver.find_element(*self.projects_button).click()
@@ -104,9 +104,6 @@ class ProjectPage:
         modal.find_element(*self.delete_button_3).click()
 
     def wait_for_delete_success(self, timeout=10):
-        WebDriverWait(self.driver, timeout).until(
-            EC.invisibility_of_element_located(self.success_toast)
-        )
         return WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_element_located(self.success_toast)
         )
