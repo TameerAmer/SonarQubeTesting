@@ -69,5 +69,3 @@ HEADLESS=true pytest UI_Testing/
 ## Contributing
 Feel free to open issues or pull requests for improvements or bug fixes.
 
-## License
-MIT
