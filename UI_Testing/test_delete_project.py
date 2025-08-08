@@ -11,7 +11,6 @@ from UI_Testing.pages import LoginPage, ProjectPage
 from selenium.webdriver.chrome.options import Options
 
 
-
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:9000')  # Default to localhost if not set
 
 class TestCreateDeleteProject(unittest.TestCase):

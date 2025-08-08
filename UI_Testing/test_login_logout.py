@@ -1,7 +1,9 @@
 
-import os
-import sys
 import unittest
+import sys
+import os
+#for the debug mode, i had to add this line to ensure the parent directory is included in the path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) # Adjust the path to include the parent directory
 from selenium import webdriver
 from UI_Testing.pages import LoginPage
 from selenium.webdriver.chrome.options import Options
