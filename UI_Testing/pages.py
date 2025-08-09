@@ -60,7 +60,7 @@ class ProjectPage:
         self.deletion_button_2 = (By.ID, "delete-project")
         self.delete_modal = (By.XPATH, "//div[@role='alertdialog' and contains(., 'Delete Project')]")
         self.delete_button_3 = (By.XPATH, ".//button[.//span[text()='Delete']]")
-        self.success_toast = (By.XPATH, "//p[contains(text(), 'has been successfully deleted.')]")
+        self.success_toast = (By.XPATH, "//*[contains(text(), 'has been successfully deleted.')]")
 
     def go_to_projects(self):
         self.driver.find_element(*self.projects_button).click()
