@@ -33,13 +33,13 @@ class TestProjects(unittest.TestCase):
 
     def test_delete_a_not_found_proj(self):
         res = requests.post(f"{self.BASE_URL}/api/projects/delete",data={"project":"NotExist"}, auth=self.AUTH)
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 404)  #not found
 
     def test_update_key(self):
         res1 = requests.post(f"{self.BASE_URL}/api/projects/create", data=self.project_data, auth=self.AUTH)  
         self.assertEqual(res1.status_code, 200)
         res2 = requests.post(f"{self.BASE_URL}/api/projects/update_key",data={"from":"my_project","to":"newKey"}, auth=self.AUTH)
-        self.assertEqual(res2.status_code, 204)
+        self.assertEqual(res2.status_code, 204)  #nothing to return
         res3 = requests.post(f"{self.BASE_URL}/api/projects/delete",data={"project":"newKey"}, auth=self.AUTH)
         self.assertEqual(res3.status_code, 204)
     
