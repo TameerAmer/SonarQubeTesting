@@ -38,7 +38,7 @@ class TestAuthentication(unittest.TestCase):
 
         # Step 3: Try accessing protected resource after logout
         after_logout = session.get(f"{self.BASE_URL}/api/system/health")
-        self.assertEqual(after_logout.status_code, 403)
+        self.assertEqual(after_logout.status_code, 403) #the request was understood by the server but forbidden
         
 
 if __name__ == "__main__":
