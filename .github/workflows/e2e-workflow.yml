@@ -106,6 +106,18 @@ jobs:
         pip install -r requirements.txt
         pip install pytest pytest-cov
 
+    - name: Start SonarQube
+      run: |
+        docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
+        # Wait for SonarQube to be ready
+        for i in {1..30}; do
+          if curl -sS -u "admin:Mypassword1?" http://localhost:9000/api/system/health | grep -q '"status":"GREEN"'; then
+            echo "SonarQube is up!"
+            break
+          fi
+          echo "Waiting for SonarQube..."
+          sleep 5
+        done
 
     - name: Run pytest with coverage
       env:
