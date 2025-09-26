@@ -4,4 +4,3 @@ selenium
 pytest
 pytest-cov
 allure-pytest
-webdriver-manager

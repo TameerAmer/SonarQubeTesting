@@ -12,7 +12,6 @@ from selenium.webdriver.chrome.options import Options
 
 
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:9000')  # Default to localhost if not set
-
 class TestCreateDeleteProject(unittest.TestCase):
     def setUp(self):
         if os.environ.get("HEADLESS", "false").lower() == "true":
@@ -25,6 +24,7 @@ class TestCreateDeleteProject(unittest.TestCase):
         self.driver.get(BASE_URL)
         self.driver.maximize_window()
         self.driver.implicitly_wait(5)
+        
 
     def test_create_delete_project(self):
         # Log in to SonarQube

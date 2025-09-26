@@ -19,6 +19,10 @@ class LoginPage:
         return "SonarQube" in self.driver.title
 
     def login(self, username, password):
+        # Wait for the username and password inputs to be visible before interacting.
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.visibility_of_element_located(self.username_input))
+        wait.until(EC.visibility_of_element_located(self.password_input))
         self.driver.find_element(*self.username_input).send_keys(username)
         self.driver.find_element(*self.password_input).send_keys(password)
         self.driver.find_element(*self.password_input).send_keys(Keys.RETURN)
