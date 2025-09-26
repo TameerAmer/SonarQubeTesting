@@ -1,0 +1,1 @@
+[{"values":["Requests+Pytest"],"name":"Test.Framework"},{"values":["refs/pull/11/merge"],"name":"GIT_BRANCH"},{"values":["true"],"name":"CI"},{"values":["3.12.11 (main, Jun  4 2025, 04:14:08) [GCC 13.3.0]"],"name":"PYTHON_VERSION"},{"values":["http://54.170.128.70:9000"],"name":"BASE_URL"}]
