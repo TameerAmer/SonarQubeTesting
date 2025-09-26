@@ -111,7 +111,7 @@ jobs:
         docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
         # Wait for SonarQube to be ready
         for i in {1..30}; do
-          if curl -sS -u "admin:Mypassword1?" http://localhost:9000/api/system/health | grep -q '"status":"GREEN"'; then
+          if curl -sS -u "admin:Mypassword1?" http://localhost:9000/api/system/health | grep -q '"health":"GREEN"'; then
             echo "SonarQube is up!"
             break
           fi
@@ -205,15 +205,10 @@ jobs:
 
     - name: Deploy Allure report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
-      # Only deploy when the run is not a pull request from a fork (forks do not have access to secrets/GITHUB_TOKEN)
-      if: ${{ success() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
       with:
-        # Use the automatically provided GITHUB_TOKEN for authenticated push; it will be available for non-fork runs
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
         publish_dir: allure-report
-
-        # Force an orphan branch publish to ensure the gh-pages branch is replaced
         force_orphan: true
         keep_files: false
         commit_message: Deploy Allure report from workflow run ${{ github.run_id }}
