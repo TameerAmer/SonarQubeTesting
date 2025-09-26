@@ -106,6 +106,24 @@ jobs:
         pip install -r requirements.txt
         pip install pytest pytest-cov
 
+    - name: Wait for SonarQube API
+      run: |
+        set -e
+        BASE=${{ secrets.EC2_HOST }}
+        URL="http://${BASE}:9000/api/system/health"
+        echo "Waiting for SonarQube at $URL"
+        attempt=0
+        until curl -sSf "$URL" >/dev/null || [ $attempt -ge 24 ]; do
+          attempt=$((attempt+1))
+          echo "SonarQube not ready yet (attempt $attempt), waiting 5s..."
+          sleep 5
+        done
+        if [ $attempt -ge 24 ]; then
+          echo "SonarQube did not become ready in time"
+          curl -sS "$URL" || true
+          exit 1
+        fi
+
     - name: Run pytest with coverage
       env:
         BASE_URL: http://${{ secrets.EC2_HOST }}:9000
