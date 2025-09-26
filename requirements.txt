@@ -3,3 +3,5 @@ requests>=2.0.0
 selenium
 pytest
 pytest-cov
+allure-pytest
+webdriver-manager

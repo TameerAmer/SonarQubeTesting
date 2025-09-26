@@ -5,9 +5,6 @@ services:
     container_name: exploitreplayer-app
     ports:
       - "8000:8000"
-    # volumes:
-      # - ./main.py:/app/main.py:ro     # Commented out for production - files are in image
-      # - ./index.html:/app/index.html:ro
     environment:
       # App configuration
       APP_HOST: 0.0.0.0
@@ -34,6 +31,7 @@ services:
       SONARQUBE_PASSWORD: ${SONARQUBE_PASSWORD:-}
       SONARQUBE_TOKEN: ${SONARQUBE_TOKEN:-}
       API_BASE_URL: ${API_BASE_URL:-http://localhost:8000}
+      IMAGE_TAG: ${IMAGE_TAG}
     depends_on:
       - postgres
       - sonarqube
