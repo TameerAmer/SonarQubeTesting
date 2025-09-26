@@ -120,7 +120,7 @@ jobs:
   
   allure-report:
     runs-on: ubuntu-latest
-    needs: Run-tests
+    needs: run-api-tests
     if: always()
     steps:
     - name: Checkout code
