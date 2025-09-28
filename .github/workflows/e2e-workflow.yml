@@ -111,7 +111,7 @@ jobs:
         docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
         # Wait for SonarQube to be ready
         for i in {1..30}; do
-          if curl -sS -u "admin:Mypassword1?" http://localhost:9000/api/system/health | grep -q '"health":"GREEN"'; then
+          if curl -sS -u "admin:Mypassword1?" http://${{ secrets.EC2_HOST }}:9000/api/system/health | grep -q '"health":"GREEN"'; then
             echo "SonarQube is up!"
             break
           fi
