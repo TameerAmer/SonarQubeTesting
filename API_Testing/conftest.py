@@ -114,22 +114,38 @@ def api(base_url, request):
             pass
 
 
+
 def pytest_configure(config):
     # write environment.properties for Allure
     try:
         os.makedirs("allure-results", exist_ok=True)
         env_file = os.path.join("allure-results", "environment.properties")
+
+        # Detect branch name
+        git_ref = os.getenv("GIT_BRANCH", os.getenv("GITHUB_REF", "local"))
+        head_ref = os.getenv("GITHUB_HEAD_REF")  # only set in pull_request workflows
+
+        if git_ref.startswith("refs/pull/") and head_ref:
+            # Use source branch of the PR
+            branch_name = head_ref
+        elif git_ref.startswith("refs/heads/"):
+            branch_name = git_ref.replace("refs/heads/", "")
+        else:
+            branch_name = git_ref
+
         with open(env_file, "w") as f:
             f.write("Test.Framework=Requests+Pytest\n")
-            f.write(f"GIT_BRANCH={os.getenv('GIT_BRANCH', os.getenv('GITHUB_REF', 'local'))}\n")
+            f.write(f"GIT_BRANCH={branch_name}\n")
             f.write(f"CI={os.getenv('CI', 'false')}\n")
             f.write(f"PYTHON_VERSION={os.getenv('PYTHON_VERSION', '') or str(os.sys.version)}\n")
+
             for key in ["BASE_URL", "API_USER", "API_PASS", "IMAGE_TAG"]:
                 val = os.getenv(key)
                 if val:
                     f.write(f"{key}={val}\n")
     except Exception:
         pass
+
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

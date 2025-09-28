@@ -55,7 +55,7 @@ jobs:
         envs: IMAGE_TAG,OPENAI_API_KEY,SONARQUBE_USERNAME,SONARQUBE_PASSWORD,DOCKERHUB_USERNAME,EC2_HOST
         script: |
           cd /home/ubuntu
-          docker compose down
+          docker compose ls | awk 'NR>1 {print $1}' | xargs -n1 -I{} docker compose -p {} down
 
           # Create or update .env file
           cat > .env <<EOF
