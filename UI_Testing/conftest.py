@@ -155,7 +155,9 @@ def pytest_configure(config):
 		env_file = os.path.join("allure-results", "environment.properties")
 		with open(env_file, "w") as f:
 			f.write("Test.Framework=SonarQube UI Selenium+Pytest\n")
-			f.write("CI.Platform=Local/CI\n")
+			ci_env = os.getenv("CI", "false").lower()
+			platform = "CI" if ci_env == "true" else "Local"
+			f.write(f"CI.Platform={platform}\n")
 			f.write("Test.Types=UI Automation\n")
 			f.write("Tooling=Allure Report\n")
 			f.write(f"GIT_BRANCH={os.getenv('GIT_BRANCH', os.getenv('GITHUB_REF', 'local'))}\n")
