@@ -160,7 +160,22 @@ def pytest_configure(config):
 			f.write(f"CI.Platform={platform}\n")
 			f.write("Test.Types=UI Automation\n")
 			f.write("Tooling=Allure Report\n")
-			f.write(f"GIT_BRANCH={os.getenv('GIT_BRANCH', os.getenv('GITHUB_REF', 'local'))}\n")
+			# Extract branch name from GITHUB_REF if present (e.g., refs/heads/feature-branch -> feature-branch)
+			github_ref = os.getenv('GITHUB_REF', '')
+			branch = os.getenv('GIT_BRANCH')
+			if not branch and github_ref:
+				# For refs/heads/branch or refs/pull/5/merge, get last part (branch or merge)
+				parts = github_ref.split('/')
+				# If it's a pull request ref, try to get the source branch from GITHUB_HEAD_REF
+				if github_ref.startswith('refs/pull/'):
+					branch = os.getenv('GITHUB_HEAD_REF', 'PR')
+				elif len(parts) >= 3:
+					branch = parts[-1]
+				else:
+					branch = github_ref
+			if not branch:
+				branch = 'local'
+			f.write(f"GIT_BRANCH={branch}\n")
 			f.write(f"CI={os.getenv('CI', 'false')}\n")
 			f.write(f"PYTHON_VERSION={os.getenv('PYTHON_VERSION', '') or str(os.sys.version)}\n")
 
