@@ -155,10 +155,24 @@ def pytest_configure(config):
 		env_file = os.path.join("allure-results", "environment.properties")
 		with open(env_file, "w") as f:
 			f.write("Test.Framework=SonarQube UI Selenium+Pytest\n")
-			f.write("CI.Platform=Local/CI\n")
+			ci_env = os.getenv("CI", "false").lower()
+			platform = "CI" if ci_env == "true" else "Local"
+			f.write(f"CI.Platform={platform}\n")
 			f.write("Test.Types=UI Automation\n")
 			f.write("Tooling=Allure Report\n")
-			f.write(f"GIT_BRANCH={os.getenv('GIT_BRANCH', os.getenv('GITHUB_REF', 'local'))}\n")
+			# Extract branch name from GITHUB_REF if present (e.g., refs/heads/feature-branch -> feature-branch)
+			# Prefer GITHUB_HEAD_REF for PRs, otherwise extract branch name from GITHUB_REF
+			branch = os.getenv('GIT_BRANCH')
+			github_head_ref = os.getenv('GITHUB_HEAD_REF')
+			github_ref = os.getenv('GITHUB_REF', '')
+			if not branch:
+				if github_head_ref:
+					branch = github_head_ref
+				elif github_ref:
+					branch = github_ref.split('/')[-1]
+				else:
+					branch = 'local'
+			f.write(f"GIT_BRANCH={branch}\n")
 			f.write(f"CI={os.getenv('CI', 'false')}\n")
 			f.write(f"PYTHON_VERSION={os.getenv('PYTHON_VERSION', '') or str(os.sys.version)}\n")
 
